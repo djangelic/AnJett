@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AnJett.com (Local Demo) — Pretend Beast Recipes</title>
+  <style>
+    :root { --bg:#0b1020; --card:#121a33; --card2:#0f162d; --text:#eef1ff; --muted:#a9b0d6; --line:#23305e; --btn:#ffffff; --btnText:#0b1020; --accent:#7ee7ff; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: radial-gradient(1000px 600px at 20% 0%, #14204a, var(--bg)); color: var(--text); }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 14px 16px; border:1px solid var(--line); border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      position: sticky; top: 10px; backdrop-filter: blur(10px);
+      z-index: 20;
+    }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px; }
+    .dot { width:12px; height:12px; border-radius: 999px; background: var(--accent); box-shadow: 0 0 20px rgba(126,231,255,.5); }
+    .nav { display:flex; gap:8px; flex-wrap: wrap; justify-content:flex-end; }
+    .pill {
+      padding: 10px 12px; border:1px solid var(--line); border-radius: 999px;
+      background: rgba(255,255,255,.04); color: var(--text);
+      cursor: pointer; user-select: none;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+    }
+    .pill:hover { background: rgba(255,255,255,.08); transform: translateY(-1px); }
+    .pill.active { border-color: rgba(126,231,255,.7); box-shadow: 0 0 0 2px rgba(126,231,255,.15) inset; }
+    .hero { padding: 28px 6px 10px; text-align:center; }
+    .h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin: 0; }
+    .sub { margin: 10px auto 18px; max-width: 720px; color: var(--muted); line-height: 1.4; }
+    .searchRow { display:flex; gap:10px; justify-content:center; flex-wrap: wrap; }
+    .input {
+      width: min(680px, 100%); padding: 14px 14px; border-radius: 14px;
+      border:1px solid var(--line); background: rgba(255,255,255,.04); color: var(--text);
+      outline: none;
+    }
+    .btn {
+      padding: 14px 16px; border-radius: 14px; border:1px solid rgba(255,255,255,.2);
+      background: var(--btn); color: var(--btnText); font-weight: 800;
+      cursor: pointer; transition: transform .06s ease, opacity .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); opacity: .92; }
+    .btn.secondary { background: rgba(255,255,255,.06); color: var(--text); border-color: var(--line); }
+    .btn.danger { background: rgba(255,75,75,.85); color: #12050a; border-color: rgba(255,75,75,.4); }
+    .row { display:flex; gap:14px; align-items:center; flex-wrap: wrap; justify-content:center; }
+    .chips { display:flex; gap:10px; flex-wrap: wrap; justify-content:center; margin-top: 10px; }
+    .chip {
+      padding: 8px 10px; border-radius: 999px; border:1px dashed rgba(255,255,255,.25);
+      color: var(--muted); cursor:pointer; user-select:none;
+    }
+    .chip:hover { border-style: solid; color: var(--text); }
+    .grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 18px; }
+    @media (max-width: 920px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } .topbar{ position: static; } }
+    .card {
+      border:1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      padding: 14px; cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      min-height: 140px;
+    }
+    .card:hover { transform: translateY(-2px); background: rgba(255,255,255,.06); border-color: rgba(126,231,255,.35); }
+    .title { font-weight: 900; letter-spacing:.2px; margin:0 0 6px; }
+    .meta { display:flex; gap:8px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-top: 8px; }
+    .tag { border:1px solid rgba(255,255,255,.14); padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.03); }
+    .section { margin-top: 26px; }
+    .section h2 { margin: 0 0 10px; font-size: 20px; letter-spacing:.2px; }
+    .twoCol { display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; }
+    @media (max-width: 920px){ .twoCol{ grid-template-columns: 1fr; } }
+    .panel {
+      border:1px solid var(--line); border-radius: 18px; padding: 14px;
+      background: rgba(0,0,0,.16);
+    }
+    .muted { color: var(--muted); }
+    .divider { height:1px; background: rgba(255,255,255,.08); margin: 14px 0; }
+    .fieldLabel { font-size: 13px; color: var(--muted); margin: 10px 0 6px; }
+    textarea.input { min-height: 88px; resize: vertical; }
+    .list { display:flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .listItem {
+      border:1px solid rgba(255,255,255,.12); border-radius: 14px;
+      padding: 12px; background: rgba(255,255,255,.03);
+      display:flex; justify-content:space-between; gap:12px; align-items:flex-start;
+    }
+    .small { font-size: 12px; color: var(--muted); }
+    .right { display:flex; gap:8px; flex-wrap: wrap; justify-content:flex-end; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono"; border:1px solid rgba(255,255,255,.18); padding:2px 6px; border-radius: 8px; font-size: 12px; color: var(--muted); }
+    .toast {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.18);
+      color: var(--text); padding: 10px 12px; border-radius: 999px;
+      display:none; z-index: 100;
+    }
+    .modalBackdrop {
+      position: fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; padding: 18px; z-index: 90;
+    }
+    .modal {
+      width: min(740px, 100%); border-radius: 18px; border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(18,26,51,.98), rgba(10,14,30,.98));
+      padding: 14px;
+    }
+    .modalTop { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .x { cursor:pointer; padding:8px 10px; border-radius: 12px; border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); }
+    .lock {
+      border:1px solid rgba(255,255,255,.14);
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,.04), rgba(255,255,255,.04) 8px, rgba(0,0,0,.08) 8px, rgba(0,0,0,.08) 16px);
+      border-radius: 18px; padding: 14px;
+    }
+    footer { margin: 26px 0 14px; text-align:center; color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand" role="button" tabindex="0" id="brandBtn" title="Go Home">
+        <div class="dot"></div>
+        <div>AnJett.com</div>
+      </div>
+      <div class="nav" role="navigation" aria-label="Main navigation">
+        <div class="pill" data-route="home">Search</div>
+        <div class="pill" data-route="generate">Generate Recipe</div>
+        <div class="pill" data-route="store">Store</div>
+        <div class="pill" data-route="downloads">My Downloads</div>
+        <div class="pill" data-route="about">About</div>
+      </div>
+    </div>
+
+    <div id="app"></div>
+
+    <footer>
+      Fan-made parody recipe site. Not affiliated with any real creator.
+      <div style="margin-top:8px;">
+        Admin mode: <span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">A</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modalBackdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Modal">
+      <div class="modalTop">
+        <div style="font-weight:900" id="modalTitle">Preview</div>
+        <div class="x" id="modalClose">Close</div>
+      </div>
+      <div class="divider"></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   AnJett.com — Single-file clickable demo
+   - Search
+   - Recipe pages
+   - Community recipe generation + pending approval
+   - Demo payments + downloads
+   ========================================================= */
+
+const money = (n) => `$${Number(n).toFixed(2)}`;
+
+const LS_KEYS = {
+  community: "anjett.community.v1",
+  purchases: "anjett.purchases.v1",
+  admin: "anjett.admin.v1"
+};
+
+const DEFAULT_OFFICIAL = [
+  {
+    id: "off-ice-beast",
+    kind: "official",
+    name: "Ice Beast",
+    price: 2.99,
+    tags: ["ice","beast","mini"],
+    preview: "A frosty snack that crunches like a beast.",
+    need: ["yogurt", "berries", "honey", "popsicle molds", "sprinkles (optional)"],
+    stepsLocked: [
+      "Mix 1 cup yogurt with 2 tbsp honey in a bowl.",
+      "Stir in 1/2 cup chopped berries.",
+      "Spoon into popsicle molds.",
+      "Freeze 3–4 hours.",
+      "Unleash the Ice Beast: add sprinkles and ROAR."
+    ],
+    keywords: ["7 millimeters","7mm","millimeters","ice beast","ice","beast","mini"]
+  },
+  {
+    id: "off-crumbzilla",
+    kind: "official",
+    name: "Crumbzilla Bars",
+    price: 2.99,
+    tags: ["snack","crunchy"],
+    preview: "Crunchy bars of doom (but actually yummy).",
+    need: ["cereal", "peanut butter (or sunflower butter)", "honey", "chocolate chips"],
+    stepsLocked: [
+      "Warm 1/2 cup peanut butter with 1/3 cup honey (adult help).",
+      "Stir in 3 cups cereal until coated.",
+      "Press into a pan and sprinkle chocolate chips on top.",
+      "Chill 30 minutes, then cut into bars.",
+      "Bonus: crush extra cereal on top for MAX CRUNCH."
+    ],
+    keywords: ["crumbzilla","crumb","bars","crunchy","snack"]
+  },
+  {
+    id: "off-mega-smoothie",
+    kind: "official",
+    name: "Mega Smoothie Beast",
+    price: 2.99,
+    tags: ["drink","mega"],
+    preview: "Big drink for big teams. Slurp power activated.",
+    need: ["bananas", "milk", "ice", "strawberries", "honey"],
+    stepsLocked: [
+      "Add 2 bananas, 1 cup strawberries, 1 cup milk, and 1 cup ice to a blender.",
+      "Blend until smooth.",
+      "Taste and add honey if you want it sweeter.",
+      "Pour into cups.",
+      "Mega move: top with fruit ‘fangs’ (sliced strawberries)."
+    ],
+    keywords: ["mega","smoothie","beast","drink","mile","tons"]
+  },
+  {
+    id: "off-pixel-pudding",
+    kind: "official",
+    name: "Pixel Pudding",
+    price: 2.99,
+    tags: ["sweet","tiny"],
+    preview: "Tiny pudding. Huge power. Add ‘pixels’ on top.",
+    need: ["pudding", "whipped cream", "cookies", "sprinkles"],
+    stepsLocked: [
+      "Spoon pudding into small cups.",
+      "Add whipped cream.",
+      "Sprinkle crushed cookies like ‘pixel dust’.",
+      "Top with sprinkles.",
+      "Eat one ‘pixel’ at a time (or… not)."
+    ],
+    keywords: ["pixel","pixels","3 pixels","tiny","sweet"]
+  }
+];
+
+const DEFAULT_PACKS = [
+  { id: "pack-ice", name: "Ice Pack (10 recipes)", price: 6.99, includes: ["Ice Beast", "Blizzard Bites", "Rainbow Freeze Stack"] },
+  { id: "pack-snack", name: "Snack Pack (10 recipes)", price: 6.99, includes: ["Crumbzilla Bars", "Snackasaurus Mix", "Choco Roar Cookies"] },
+  { id: "pack-mega", name: "Mega Pack (10 recipes)", price: 6.99, includes: ["Mega Smoothie Beast", "Mega Trail Mix", "Gigantic Nachos"] }
+];
+
+function loadJSON(key, fallback){
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function saveJSON(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getCommunityState(){
+  const s = loadJSON(LS_KEYS.community, null);
+  if (s) return s;
+  const init = {
+    approved: [
+      {
+        id: "com-7mm-ice-monster",
+        kind: "community",
+        name: "7mm Ice Monster Pops",
+        chef: "ChefJett7",
+        tags: ["ice","funny","7mm"],
+        preview: "It’s small… but it ROARS!",
+        need: ["yogurt", "juice", "berries", "molds"],
+        stepsLocked: [
+          "Mix juice and yogurt (half and half).",
+          "Add tiny berry bits.",
+          "Freeze in molds.",
+          "Roar when you take the first bite."
+        ],
+        priceCard: 1.99,
+        keywords: ["7 millimeters","7mm","millimeters","ice","monster","pops"]
+      }
+    ],
+    pending: []
+  };
+  saveJSON(LS_KEYS.community, init);
+  return init;
+}
+
+function getPurchases(){
+  return loadJSON(LS_KEYS.purchases, []);
+}
+
+function addPurchase(p){
+  const purchases = getPurchases();
+  purchases.unshift({ ...p, purchasedAt: new Date().toISOString() });
+  saveJSON(LS_KEYS.purchases, purchases);
+}
+
+function isAdmin(){
+  return loadJSON(LS_KEYS.admin, false) === true;
+}
+function setAdmin(v){
+  saveJSON(LS_KEYS.admin, !!v);
+}
+
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=> el.style.display = "none", 1600);
+}
+
+/* -------------------- Routing -------------------- */
+let STATE = {
+  route: "home",
+  query: "",
+  activeRecipeId: null
+};
+
+function setRoute(route, params={}){
+  STATE = { ...STATE, route, ...params };
+  render();
+}
+
+function setActiveRecipe(id){
+  STATE.activeRecipeId = id;
+  setRoute("recipe");
+}
+
+/* -------------------- Search -------------------- */
+function allRecipes(){
+  const com = getCommunityState();
+  return [
+    ...DEFAULT_OFFICIAL,
+    ...com.approved.map(r => ({
+      ...r,
+      price: r.priceCard ?? 1.99
+    }))
+  ];
+}
+
+function searchRecipes(q){
+  q = (q || "").trim().toLowerCase();
+  if (!q) return { official: DEFAULT_OFFICIAL, community: getCommunityState().approved };
+
+  const tokens = q.split(/\s+/).filter(Boolean);
+
+  const match = (r) => {
+    const hay = [
+      r.name,
+      (r.preview || ""),
+      ...(r.tags || []),
+      ...((r.keywords||[]))
+    ].join(" ").toLowerCase();
+
+    // basic scoring: count token hits
+    let score = 0;
+    for (const t of tokens){
+      if (hay.includes(t)) score += 1;
+    }
+    // bonus if full query matches a keyword
+    if ((r.keywords||[]).some(k => k.toLowerCase() === q)) score += 3;
+    return score;
+  };
+
+  const official = DEFAULT_OFFICIAL
+    .map(r => ({ r, s: match(r) }))
+    .filter(x => x.s > 0)
+    .sort((a,b)=> b.s - a.s)
+    .map(x => x.r);
+
+  const community = getCommunityState().approved
+    .map(r => ({ r, s: match(r) }))
+    .filter(x => x.s > 0)
+    .sort((a,b)=> b.s - a.s)
+    .map(x => x.r);
+
+  return { official, community };
+}
+
+/* -------------------- Modal -------------------- */
+function openModal(title, bodyHTML){
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalBody").innerHTML = bodyHTML;
+  const back = document.getElementById("modalBackdrop");
+  back.style.display = "flex";
+  back.setAttribute("aria-hidden","false");
+}
+function closeModal(){
+  const back = document.getElementById("modalBackdrop");
+  back.style.display = "none";
+  back.setAttribute("aria-hidden","true");
+}
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
+  if (e.target.id === "modalBackdrop") closeModal();
+});
+
+/* -------------------- Downloads -------------------- */
+function downloadTextFile(filename, text){
+  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* -------------------- DEMO Payment --------------------
+   This is where you would replace the demo confirm()
+   with a real Stripe Checkout redirect.
+------------------------------------------------------ */
+async function demoPayAndUnlock(item){
+  // mouse-friendly popup
+  const ok = confirm(`DEMO PAYMENT\n\nPay ${money(item.price)} to download:\n${item.name}\n\nClick OK to simulate a successful payment.`);
+  if (!ok) return false;
+
+  addPurchase({
+    id: item.id,
+    name: item.name,
+    price: item.price,
+    kind: item.kind,
+    type: item.type || "recipe"
+  });
+
+  toast("Payment success! Download unlocked.");
+  return true;
+}
+
+/* -------------------- Render helpers -------------------- */
+function navActive(){
+  document.querySelectorAll(".pill").forEach(p => {
+    p.classList.toggle("active", p.dataset.route === STATE.route);
+  });
+}
+
+function recipeById(id){
+  const com = getCommunityState();
+  return (
+    DEFAULT_OFFICIAL.find(r => r.id === id) ||
+    com.approved.find(r => r.id === id) ||
+    com.pending.find(r => r.id === id) ||
+    null
+  );
+}
+
+function cardHTML(r, label){
+  const by = r.kind === "community" ? `<span class="tag">By: ${escapeHTML(r.chef || "Community")}</span>` : "";
+  const tags = (r.tags || []).slice(0,4).map(t => `<span class="tag">${escapeHTML(t)}</span>`).join("");
+  const price = r.kind === "community" ? (r.priceCard ?? 1.99) : (r.price ?? 2.99);
+  return `
+    <div class="card" data-open="${escapeHTML(r.id)}" role="button" tabindex="0" title="Open recipe">
+      <h3 class="title">${escapeHTML(r.name)}</h3>
+      <div class="muted">${escapeHTML(r.preview || "")}</div>
+      <div class="meta">
+        <span class="tag">${label}</span>
+        ${by}
+        <span class="tag">Download ${money(price)}</span>
+        ${tags}
+      </div>
+    </div>
+  `;
+}
+
+function escapeHTML(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* -------------------- Views -------------------- */
+function viewHome(){
+  return `
+    <div class="hero">
+      <h1 class="h1">Pretend Beast Recipes</h1>
+      <div class="sub">Search silly recipes, preview them, then pay to download recipe cards. Community can make recipes using <b>Generate Recipe</b>.</div>
+      <div class="searchRow">
+        <input class="input" id="searchInput" placeholder='Try: 7 millimeters, ice beast, crumbzilla…' value="${escapeHTML(STATE.query)}" />
+        <button class="btn" id="searchBtn">SEARCH</button>
+        <button class="btn secondary" id="goGenerateBtn">GENERATE RECIPE</button>
+      </div>
+      <div class="chips" aria-label="Trending searches">
+        ${["7 millimeters","ice beast","crumbzilla","mega smoothie","pixel pudding"].map(t=>`
+          <div class="chip" data-chip="${escapeHTML(t)}">${escapeHTML(t)}</div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Featured Today</h2>
+      <div class="grid">
+        ${DEFAULT_OFFICIAL.slice(0,3).map(r => cardHTML(r, "Official")).join("")}
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Community Spotlight</h2>
+      <div class="grid">
+        ${getCommunityState().approved.slice(0,3).map(r => cardHTML(r, "Community")).join("") || `
+          <div class="panel muted">No community recipes yet — click Generate Recipe to add the first one!</div>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function viewResults(){
+  const { official, community } = searchRecipes(STATE.query);
+  const q = (STATE.query || "").trim();
+  const empty = (official.length + community.length) === 0;
+
+  return `
+    <div class="section">
+      <h2>Search results for: <span class="muted">"${escapeHTML(q)}"</span></h2>
+
+      <div class="panel">
+        <div class="row">
+          <input class="input" id="searchInput" placeholder="Search recipes..." value="${escapeHTML(STATE.query)}" />
+          <button class="btn" id="searchBtn">SEARCH</button>
+          <button class="btn secondary" id="clearBtn">CLEAR</button>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          Tip: Try <span class="kbd">7 millimeters</span> or <span class="kbd">ice beast</span>.
+        </div>
+      </div>
+
+      ${empty ? `
+        <div class="panel" style="margin-top:14px;">
+          <div style="font-weight:900;">No results…</div>
+          <div class="muted">Try “ice beast”, “crumbzilla”, or “mega smoothie”.</div>
+        </div>
+      ` : ""}
+
+      <div class="section">
+        <h2>Official Recipes</h2>
+        <div class="grid">
+          ${official.map(r => cardHTML(r, "Official")).join("") || `<div class="panel muted">No official matches.</div>`}
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Community Recipes</h2>
+        <div class="grid">
+          ${community.map(r => cardHTML(r, "Community")).join("") || `<div class="panel muted">No community matches.</div>`}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function viewRecipe(){
+  const r = recipeById(STATE.activeRecipeId);
+  if (!r){
+    return `
+      <div class="section">
+        <div class="panel">
+          <div style="font-weight:900;">Recipe not found.</div>
+          <div class="muted">Go back and search again.</div>
+          <div class="divider"></div>
+          <button class="btn" id="goHomeBtn">GO HOME</button>
+        </div>
+      </div>
+    `;
+  }
+
+  const price = r.kind === "community" ? (r.priceCard ?? 1.99) : (r.price ?? 2.99);
+  const by = r.kind === "community" ? `<span class="tag">By: ${escapeHTML(r.chef || "Community")}</span>` : `<span class="tag">Official</span>`;
+  const tags = (r.tags || []).map(t => `<span class="tag">${escapeHTML(t)}</span>`).join("");
+
+  return `
+    <div class="section">
+      <div class="twoCol">
+        <div class="panel">
+          <h2 style="margin:0 0 8px;">${escapeHTML(r.name)}</h2>
+          <div class="meta">${by}<span class="tag">Download ${money(price)}</span>${tags}</div>
+
+          <div class="divider"></div>
+
+          <div style="font-weight:900;">Preview (Free)</div>
+          <div class="muted" style="margin-top:6px;">${escapeHTML(r.preview || "")}</div>
+
+          <div class="fieldLabel">What you'll need (Preview)</div>
+          <div class="list">
+            ${(r.need || []).slice(0,5).map(x => `<div class="listItem"><div>${escapeHTML(x)}</div></div>`).join("") || `<div class="muted">No ingredients listed.</div>`}
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="lock">
+            <div style="font-weight:900;">LOCKED: Full Recipe (Download to unlock)</div>
+            <div class="muted" style="margin-top:6px;">Full steps + exact amounts + Beast Tips + printable recipe card.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row" style="justify-content:flex-start;">
+            <button class="btn" id="previewBtn">PREVIEW CARD</button>
+            <button class="btn" id="payBtn">PAY & DOWNLOAD ${money(price)}</button>
+          </div>
+          <div class="small" style="margin-top:10px;">For parents/guardians. This demo simulates payment.</div>
+        </div>
+
+        <div class="panel">
+          <div style="font-weight:900;">More like this</div>
+          <div class="muted" style="margin-top:6px;">Click any card to open it.</div>
+          <div class="divider"></div>
+          <div class="list">
+            ${DEFAULT_OFFICIAL.slice(0,3).map(x => `
+              <div class="listItem" style="cursor:pointer" data-open="${escapeHTML(x.id)}">
+                <div>
+                  <div style="font-weight:900;">${escapeHTML(x.name)}</div>
+                  <div class="small">${escapeHTML(x.preview)}</div>
+                </div>
+                <div class="small">Open</div>
+              </div>
+            `).join("")}
+          </div>
+
+          ${isAdmin() ? `
+            <div class="divider"></div>
+            <div style="font-weight:900;">Admin</div>
+            <div class="small">You can approve community submissions in the Generate page.</div>
+          ` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function viewGenerate(){
+  const com = getCommunityState();
+  const pending = com.pending || [];
+  const admin = isAdmin();
+
+  return `
+    <div class="section">
+      <h2>Generate Recipe</h2>
+      <div class="muted">Make your own pretend recipe and submit it to the community. Submissions are reviewed before going live.</div>
+
+      <div class="twoCol" style="margin-top:14px;">
+        <div class="panel">
+          <div class="fieldLabel">Recipe Name</div>
+          <input class="input" id="gName" placeholder="Example: Ice Beast" />
+
+          <div class="fieldLabel">Category</div>
+          <div class="row" style="justify-content:flex-start;">
+            ${["Ice","Snack","Sweet","Spicy","Mystery"].map(c => `<label class="pill" style="cursor:pointer;"><input type="radio" name="cat" value="${c}" style="margin-right:8px;" />${c}</label>`).join("")}
+          </div>
+
+          <div class="fieldLabel">Short Description</div>
+          <textarea class="input" id="gDesc" placeholder="1–2 sentences. Keep it fun!"></textarea>
+
+          <div class="fieldLabel">Ingredients (one per line)</div>
+          <textarea class="input" id="gNeed" placeholder="yogurt&#10;berries&#10;honey"></textarea>
+
+          <div class="fieldLabel">Steps (one per line)</div>
+          <textarea class="input" id="gSteps" placeholder="Mix the stuff.&#10;Freeze it.&#10;Add sprinkles and roar."></textarea>
+
+          <div class="fieldLabel">Tags (comma separated)</div>
+          <input class="input" id="gTags" placeholder="ice, beast, mini, funny" />
+
+          <div class="fieldLabel">Chef Name (nickname only)</div>
+          <input class="input" id="gChef" placeholder="Example: ChefJett7" />
+
+          <div class="divider"></div>
+
+          <div class="row" style="justify-content:flex-start;">
+            <button class="btn secondary" id="gPreview">PREVIEW</button>
+            <button class="btn" id="gSubmit">SUBMIT TO COMMUNITY</button>
+          </div>
+          <div class="small" style="margin-top:10px;">Tip: Don’t include personal info (no phone/email/address).</div>
+        </div>
+
+        <div class="panel">
+          <div style="font-weight:900;">Pending Submissions</div>
+          <div class="small">Visible to admins for approval.</div>
+          <div class="divider"></div>
+
+          ${pending.length === 0 ? `<div class="muted">No pending recipes right now.</div>` : `
+            <div class="list">
+              ${pending.map(p => `
+                <div class="listItem">
+                  <div>
+                    <div style="font-weight:900;">${escapeHTML(p.name)}</div>
+                    <div class="small">By: ${escapeHTML(p.chef || "Unknown")} · Tags: ${(p.tags||[]).map(escapeHTML).join(", ")}</div>
+                    <div class="small">${escapeHTML(p.preview || "")}</div>
+                  </div>
+                  <div class="right">
+                    <button class="btn secondary" data-viewpending="${escapeHTML(p.id)}">VIEW</button>
+                    ${admin ? `<button class="btn" data-approve="${escapeHTML(p.id)}">APPROVE</button>` : ""}
+                    ${admin ? `<button class="btn danger" data-reject="${escapeHTML(p.id)}">REJECT</button>` : ""}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          `}
+
+          <div class="divider"></div>
+          <div style="font-weight:900;">Community Live</div>
+          <div class="small">Approved recipes show up in Search.</div>
+          <div class="divider"></div>
+          <div class="list">
+            ${com.approved.slice(0,4).map(r => `
+              <div class="listItem" style="cursor:pointer" data-open="${escapeHTML(r.id)}">
+                <div>
+                  <div style="font-weight:900;">${escapeHTML(r.name)}</div>
+                  <div class="small">By: ${escapeHTML(r.chef || "Community")}</div>
+                </div>
+                <div class="small">Open</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function viewStore(){
+  return `
+    <div class="section">
+      <h2>Store</h2>
+      <div class="muted">Buy packs and download them. (Demo payment in this file.)</div>
+
+      <div class="grid" style="margin-top:14px;">
+        ${DEFAULT_PACKS.map(p => `
+          <div class="card" data-buypack="${escapeHTML(p.id)}" role="button" tabindex="0" title="Buy pack">
+            <h3 class="title">${escapeHTML(p.name)}</h3>
+            <div class="muted">Includes: ${escapeHTML(p.includes.join(", "))}</div>
+            <div class="meta">
+              <span class="tag">Pack</span>
+              <span class="tag">${money(p.price)}</span>
+              <span class="tag">Pay & Download</span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function viewDownloads(){
+  const purchases = getPurchases();
+  return `
+    <div class="section">
+      <h2>My Downloads</h2>
+      <div class="muted">Anything you “paid for” (demo) will appear here for re-download.</div>
+
+      <div class="panel" style="margin-top:14px;">
+        ${purchases.length === 0 ? `
+          <div style="font-weight:900;">No downloads yet.</div>
+          <div class="muted">Go search a recipe and click Pay & Download.</div>
+          <div class="divider"></div>
+          <button class="btn" id="goSearchBtn">GO SEARCH</button>
+        ` : `
+          <div class="list">
+            ${purchases.map(p => `
+              <div class="listItem">
+                <div>
+                  <div style="font-weight:900;">${escapeHTML(p.name)}</div>
+                  <div class="small">${escapeHTML(p.kind || "item")} · Paid ${money(p.price)} · ${new Date(p.purchasedAt).toLocaleString()}</div>
+                </div>
+                <div class="right">
+                  <button class="btn" data-redownload="${escapeHTML(p.id)}">DOWNLOAD AGAIN</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+          <div class="divider"></div>
+          <button class="btn secondary" id="clearPurchasesBtn">CLEAR DOWNLOAD HISTORY</button>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function viewAbout(){
+  return `
+    <div class="section">
+      <h2>About</h2>
+      <div class="panel">
+        <div style="font-weight:900;">What is AnJett.com?</div>
+        <div class="muted" style="margin-top:6px;">
+          A playful pretend recipe site: search recipes, preview them, then pay to download a recipe card.
+          The community can make their own recipes using Generate Recipe.
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-weight:900;">Disclaimer</div>
+        <div class="muted" style="margin-top:6px;">
+          Fan-made parody recipe site. Not affiliated with any real creator.
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-weight:900;">Real payments later</div>
+        <div class="muted" style="margin-top:6px;">
+          This file uses demo payments. To take real money, you’d connect a real checkout flow (e.g., Stripe Checkout)
+          and unlock downloads only after a verified payment.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* -------------------- Main render -------------------- */
+function render(){
+  const app = document.getElementById("app");
+
+  // Highlight nav item
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(`.pill[data-route="${STATE.route}"]`).forEach(p => p.classList.add("active"));
+
+  let html = "";
+  if (STATE.route === "home") html = viewHome();
+  else if (STATE.route === "results") html = viewResults();
+  else if (STATE.route === "recipe") html = viewRecipe();
+  else if (STATE.route === "generate") html = viewGenerate();
+  else if (STATE.route === "store") html = viewStore();
+  else if (STATE.route === "downloads") html = viewDownloads();
+  else if (STATE.route === "about") html = viewAbout();
+  else html = viewHome();
+
+  app.innerHTML = html;
+
+  // Wire interactions after render
+  wireEvents();
+}
+
+function wireEvents(){
+  // Nav
+  document.querySelectorAll(".pill").forEach(p => {
+    p.addEventListener("click", () => setRoute(p.dataset.route));
+  });
+
+  // Brand
+  document.getElementById("brandBtn").onclick = () => setRoute("home", { query: "" });
+
+  // Search events
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchBtn");
+  if (searchInput && searchBtn){
+    const doSearch = () => {
+      STATE.query = searchInput.value;
+      setRoute("results");
+    };
+    searchBtn.onclick = doSearch;
+    searchInput.addEventListener("keydown", (e)=> {
+      if (e.key === "Enter") doSearch();
+    });
+  }
+
+  // Home chips
+  document.querySelectorAll("[data-chip]").forEach(chip => {
+    chip.addEventListener("click", () => {
+      STATE.query = chip.dataset.chip;
+      setRoute("results");
+    });
+  });
+
+  // Home button
+  const goGenerateBtn = document.getElementById("goGenerateBtn");
+  if (goGenerateBtn) goGenerateBtn.onclick = () => setRoute("generate");
+
+  // Clear results
+  const clearBtn = document.getElementById("clearBtn");
+  if (clearBtn) clearBtn.onclick = () => setRoute("home", { query: "" });
+
+  // Open recipe cards
+  document.querySelectorAll("[data-open]").forEach(el => {
+    el.addEventListener("click", ()=> setActiveRecipe(el.dataset.open));
+    el.addEventListener("keydown", (e)=> { if (e.key === "Enter") setActiveRecipe(el.dataset.open); });
+  });
+
+  // Recipe page buttons
+  const previewBtn = document.getElementById("previewBtn");
+  const payBtn = document.getElementById("payBtn");
+  if (previewBtn && payBtn){
+    const r = recipeById(STATE.activeRecipeId);
+    previewBtn.onclick = () => {
+      const text = recipeCardText(r, false);
+      openModal("Recipe Card Preview", `<pre style="white-space:pre-wrap; margin:0; color:var(--text)">${escapeHTML(text)}</pre>`);
+    };
+    payBtn.onclick = async () => {
+      const price = r.kind === "community" ? (r.priceCard ?? 1.99) : (r.price ?? 2.99);
+      const ok = await demoPayAndUnlock({ id:r.id, name:r.name, price, kind:r.kind, type:"recipe" });
+      if (!ok) return;
+      // Download “card”
+      const text = recipeCardText(r, true);
+      downloadTextFile(`${safeFilename(r.name)}-AnJett-Card.txt`, text);
+      setRoute("downloads");
+    };
+  }
+
+  // Store purchase
+  document.querySelectorAll("[data-buypack]").forEach(el => {
+    el.addEventListener("click", async () => {
+      const pack = DEFAULT_PACKS.find(p => p.id === el.dataset.buypack);
+      if (!pack) return;
+      const ok = await demoPayAndUnlock({ id: pack.id, name: pack.name, price: pack.price, kind:"pack", type:"pack" });
+      if (!ok) return;
+      const text = packCardText(pack);
+      downloadTextFile(`${safeFilename(pack.name)}-AnJett-Pack.txt`, text);
+      setRoute("downloads");
+    });
+  });
+
+  // Downloads re-download + clear
+  document.querySelectorAll("[data-redownload]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const purchases = getPurchases();
+      const p = purchases.find(x => x.id === btn.dataset.redownload);
+      if (!p) return;
+
+      // If it is a pack, re-generate pack text; if recipe, pull recipe by id
+      if (p.type === "pack"){
+        const pack = DEFAULT_PACKS.find(x => x.id === p.id);
+        if (pack) downloadTextFile(`${safeFilename(pack.name)}-AnJett-Pack.txt`, packCardText(pack));
+        return;
+      }
+      const r = recipeById(p.id);
+      if (r) downloadTextFile(`${safeFilename(r.name)}-AnJett-Card.txt`, recipeCardText(r, true));
+    });
+  });
+
+  const clearPurchasesBtn = document.getElementById("clearPurchasesBtn");
+  if (clearPurchasesBtn){
+    clearPurchasesBtn.onclick = () => {
+      if (!confirm("Clear download history?")) return;
+      saveJSON(LS_KEYS.purchases, []);
+      toast("Cleared.");
+      render();
+    };
+  }
+  const goSearchBtn = document.getElementById("goSearchBtn");
+  if (goSearchBtn) goSearchBtn.onclick = () => setRoute("home");
+
+  // Generate form buttons
+  const gPreview = document.getElementById("gPreview");
+  const gSubmit = document.getElementById("gSubmit");
+  if (gPreview && gSubmit){
+    gPreview.onclick = () => {
+      const draft = readGenerateForm();
+      if (!draft) return;
+      openModal("Preview Submission", `<pre style="white-space:pre-wrap; margin:0;">${escapeHTML(recipeCardText(draft, false))}</pre>`);
+    };
+
+    gSubmit.onclick = () => {
+      const draft = readGenerateForm();
+      if (!draft) return;
+
+      // basic safety check for personal info patterns
+      const combined = `${draft.name} ${draft.preview} ${(draft.stepsLocked||[]).join(" ")} ${(draft.need||[]).join(" ")}`.toLowerCase();
+      const looksLikePersonal = /(\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b)|(@)|(\baddress\b)|(\bstreet\b)|(\bemail\b)/i.test(combined);
+      if (looksLikePersonal){
+        alert("Please remove personal info (no phone/email/address).");
+        return;
+      }
+
+      const com = getCommunityState();
+      com.pending.unshift(draft);
+      saveJSON(LS_KEYS.community, com);
+      toast("Submitted! It’s in the review cave 🐾");
+      render();
+    };
+  }
+
+  // Pending controls (admin)
+  document.querySelectorAll("[data-viewpending]").forEach(b => {
+    b.addEventListener("click", () => {
+      const com = getCommunityState();
+      const p = com.pending.find(x => x.id === b.dataset.viewpending);
+      if (!p) return;
+      openModal("Pending Recipe", `<pre style="white-space:pre-wrap; margin:0;">${escapeHTML(recipeCardText(p, true))}</pre>`);
+    });
+  });
+
+  document.querySelectorAll("[data-approve]").forEach(b => {
+    b.addEventListener("click", () => {
+      if (!isAdmin()){ alert("Admin mode is off."); return; }
+      const com = getCommunityState();
+      const idx = com.pending.findIndex(x => x.id === b.dataset.approve);
+      if (idx === -1) return;
+      const item = com.pending.splice(idx, 1)[0];
+      com.approved.unshift(item);
+      saveJSON(LS_KEYS.community, com);
+      toast("Approved!");
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-reject]").forEach(b => {
+    b.addEventListener("click", () => {
+      if (!isAdmin()){ alert("Admin mode is off."); return; }
+      if (!confirm("Reject and delete this submission?")) return;
+      const com = getCommunityState();
+      com.pending = com.pending.filter(x => x.id !== b.dataset.reject);
+      saveJSON(LS_KEYS.community, com);
+      toast("Rejected.");
+      render();
+    });
+  });
+
+  // go home button (error state)
+  const goHomeBtn = document.getElementById("goHomeBtn");
+  if (goHomeBtn) goHomeBtn.onclick = () => setRoute("home", { query:"" });
+}
+
+function readGenerateForm(){
+  const name = document.getElementById("gName")?.value?.trim() || "";
+  const desc = document.getElementById("gDesc")?.value?.trim() || "";
+  const needLines = (document.getElementById("gNeed")?.value || "").split("\n").map(s=>s.trim()).filter(Boolean);
+  const stepsLines = (document.getElementById("gSteps")?.value || "").split("\n").map(s=>s.trim()).filter(Boolean);
+  const tags = (document.getElementById("gTags")?.value || "").split(",").map(s=>s.trim()).filter(Boolean);
+  const chef = document.getElementById("gChef")?.value?.trim() || "";
+  const cat = document.querySelector('input[name="cat"]:checked')?.value || "";
+
+  if (!name || !desc || needLines.length < 2 || stepsLines.length < 2 || !chef){
+    alert("Please fill out: name, description, chef name, at least 2 ingredients, and at least 2 steps.");
+    return null;
+  }
+
+  // Build keyword list for search
+  const keywords = [
+    name, chef, cat,
+    ...tags,
+    ...needLines.slice(0,6),
+    ...stepsLines.slice(0,3)
+  ].map(s => String(s).toLowerCase()).filter(Boolean);
+
+  const id = "com-" + Math.random().toString(16).slice(2) + "-" + Date.now();
+
+  return {
+    id,
+    kind: "community",
+    name,
+    chef,
+    tags: [...new Set([cat.toLowerCase(), ...tags])].filter(Boolean),
+    preview: desc,
+    need: needLines,
+    stepsLocked: stepsLines,
+    priceCard: 1.99,
+    keywords
+  };
+}
+
+function recipeCardText(r, includeLocked){
+  const price = r.kind === "community" ? (r.priceCard ?? 1.99) : (r.price ?? 2.99);
+  const head = [
+    "AnJett.com — Recipe Card",
+    "=======================",
+    "",
+    `Name: ${r.name}`,
+    `Type: ${r.kind === "community" ? "Community" : "Official"}`,
+    r.kind === "community" ? `Chef: ${r.chef || "Community"}` : "",
+    `Tags: ${(r.tags || []).join(", ")}`,
+    "",
+    "Preview:",
+    r.preview || "",
+    "",
+    "What you’ll need:",
+    ...(r.need || []).map(x => `- ${x}`),
+    ""
+  ].filter(Boolean);
+
+  if (!includeLocked){
+    head.push("LOCKED SECTION: Pay to download for full steps + tips.");
+    head.push(`Price: ${money(price)}`);
+    return head.join("\n");
+  }
+
+  head.push("Full Steps:");
+  head.push(...(r.stepsLocked || []).map((s,i)=> `${i+1}) ${s}`));
+  head.push("");
+  head.push("Beast Tips:");
+  head.push("- Keep it fun. Keep it safe.");
+  head.push("- Ask an adult for heat/sharp tools.");
+  head.push("");
+  head.push(`Price Paid: ${money(price)} (demo)`);
+  return head.join("\n");
+}
+
+function packCardText(p){
+  return [
+    "AnJett.com — Recipe Pack",
+    "=======================",
+    "",
+    `Pack: ${p.name}`,
+    `Price: ${money(p.price)} (demo)`,
+    "",
+    "Includes:",
+    ...p.includes.map(x => `- ${x}`),
+    "",
+    "Tip: Search the recipe names to find matching cards."
+  ].join("\n");
+}
+
+function safeFilename(name){
+  return String(name).replace(/[^\w\s\-]+/g, "").trim().replace(/\s+/g, "-");
+}
+
+/* -------------------- Keyboard shortcut for Admin -------------------- */
+window.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === "A" || e.key === "a")){
+    const v = !isAdmin();
+    setAdmin(v);
+    toast(v ? "Admin mode ON" : "Admin mode OFF");
+    render();
+  }
+});
+
+/* -------------------- Startup -------------------- */
+render();
+</script>
+</body>
+</html>
