@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AnJett.com — Pretend Monster Recipes</title>
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand" id="brandBtn" title="Home" role="button" tabindex="0">
+        <span class="dot"></span>
+        <span class="brandText">AnJett.com</span>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <button class="pill" data-route="home" type="button">Search</button>
+        <button class="pill" data-route="generate" type="button">Generate Recipe</button>
+        <button class="pill" data-route="store" type="button">Store</button>
+        <button class="pill" data-route="downloads" type="button">My Downloads</button>
+        <button class="pill" data-route="about" type="button">About</button>
+      </nav>
+    </header>
+
+    <main id="app" class="app"></main>
+
+    <footer class="footer">
+      Fan-made parody recipe site. Not affiliated with any real creator.
+      <div class="footerSmall">RoboHash monsters are used for recipe creatures.</div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <div class="modalBackdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Modal">
+      <div class="modalTop">
+        <div class="modalTitle" id="modalTitle">Preview</div>
+        <button class="x" id="modalClose" type="button">Close</button>
+      </div>
+      <div class="divider"></div>
+      <div id="modalBody" class="modalBody"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./assets/app.js"></script>
+</body>
+</html>
